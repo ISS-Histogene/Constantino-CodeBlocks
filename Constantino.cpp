@@ -80,38 +80,37 @@ int diferencaMatriz(vector< vector<int> >matriz){
     return dif;
 }
 
-void principal(vector< vector<int> > teste, int movimentos){
+void principal(vector< vector<int> > teste2, int movimentos){
     string retorno1;
     string retorno2;
     string retorno3;
     string retorno4;
 
-    std::unordered_map<string,vector< vector<int> >> closed_list;
-    std::multimap<int,vector< vector<int> >> open_list;
-    int difteste = diferencaMatriz(teste);
-    string estadoanterior = "";
+    std::unordered_map<string,int> closed_list;
+    std::multimap<int,std::pair<vector< vector<int> >, string> > open_list;
+    int difteste = diferencaMatriz(teste2);
 
+    string estadoanterior = "";
+    string pai;
+    std::pair<vector< vector<int> >, string> segundo;
+    std::pair<int, std::pair<vector< vector<int> >, string> > inserir;
+    inserir = std::make_pair(difteste, teste2);
+    open_list.insert(inserir);
     int counter = 0;
-    while(counter < 390000){
-            /*
+    while(!open_list.empty()){
+
+        auto primeiro = open_list.cbegin();
+        std::pair<vector< vector<int> >, string>  par2 = primeiro->second;
+        vector< vector<int> > teste = par2.first;
+        open_list.erase(primeiro);
+        cout<<"Custo: "<<primeiro->first<<"\n";
+
         cout<<"Continuar? R: ";
         int opt;
         cin>>opt;
         if(opt==1){
             break;
         }
-
-        counter++;
-        if ((counter==10000) || (counter==40000) || (counter==80000)){
-            cout<<"Continuar? R: ";
-            int opt;
-            cin>>opt;
-            if(opt==1){
-                break;
-            }
-        }
-        */
-        counter++;
         int t;
         for (t=0; t<4; t++){
             cout<<teste[t][0]<<" "<<teste[t][1]<<" "<<teste[t][2]<<" "<<teste[t][3]<<"\n";
@@ -133,13 +132,16 @@ void principal(vector< vector<int> > teste, int movimentos){
             matriz[x][y] = teste[x0][y];
             matriz[x0][y] = teste[x][y];
             string possibilidade = transformaMatrizString(matriz);
-            std::unordered_map<std::string,vector< vector<int> >>::const_iterator got1 = closed_list.find(possibilidade);
-            std::multimap<int,vector< vector<int> >>::const_iterator got2 = open_list.find(possibilidade);
-            if ((got1==closed_list.end())&&(got2!=open_list.end())){
+            std::unordered_map<std::string,int>::iterator got1 = closed_list.find(possibilidade);
+            if (got1==closed_list.end()){
                     int dif = diferencaMatriz(matriz);
                     int total = dif + counter;
-                    std::pair<int,vector< vector<int> >> inserir (total, matriz);
+                    string pai = transformaMatrizString(teste);
+                    std::pair<vector< vector<int> >, string> segundo;
+                    std::pair<int,segundo> inserir (total, matriz);
                     open_list.insert(inserir);
+                    std::pair<std::string,vector< vector<int> >> estadoadicionado (possibilidade, teste);
+                    closed_list.insert(estadoadicionado);
             }
             else{
                 cout<<"Caiu aqui"<<"\n";
@@ -151,13 +153,16 @@ void principal(vector< vector<int> > teste, int movimentos){
             matriz[x][y] = teste[x1][y];
             matriz[x1][y] = teste[x][y];
             string possibilidade = transformaMatrizString(matriz);
-            std::unordered_map<std::string,vector< vector<int> >>::const_iterator got1 = closed_list.find(possibilidade);
-            std::multimap<int,vector< vector<int> >>::const_iterator got2 = open_list.find(possibilidade);
-            if ((got1==closed_list.end())&&(got2!=open_list.end())){
+            std::unordered_map<std::string,int>::iterator got1 = closed_list.find(possibilidade);
+            if (got1==closed_list.end()){
                     int dif = diferencaMatriz(matriz);
                     int total = dif + counter;
-                    std::pair<int,vector< vector<int> >> inserir (total, matriz);
+                    string pai = transformaMatrizString(teste);
+                    std::pair<vector< vector<int> >, pai> segundo;
+                    std::pair<int,segundo> inserir (total, matriz);
                     open_list.insert(inserir);
+                    std::pair<std::string,vector< vector<int> >> estadoadicionado (possibilidade, teste);
+                    closed_list.insert(estadoadicionado);
             }
             else{
                 cout<<"Caiu aqui"<<"\n";
@@ -169,13 +174,16 @@ void principal(vector< vector<int> > teste, int movimentos){
             matriz[x][y] = teste[x][y0];
             matriz[x][y0] = teste[x][y];
             string possibilidade = transformaMatrizString(matriz);
-            std::unordered_map<std::string,vector< vector<int> >>::const_iterator got1 = closed_list.find(possibilidade);
-            std::multimap<int,vector< vector<int> >>::const_iterator got2 = open_list.find(possibilidade);
-            if ((got1==closed_list.end())&&(got2!=open_list.end())){
+            std::unordered_map<std::string,int>::iterator got1 = closed_list.find(possibilidade);
+            if (got1==closed_list.end()){
                     int dif = diferencaMatriz(matriz);
                     int total = dif + counter;
-                    std::pair<int,vector< vector<int> >> inserir (total, matriz);
+                    string pai = transformaMatrizString(teste);
+                    std::pair<vector< vector<int> >, pai> segundo;
+                    std::pair<int,segundo> inserir (total, matriz);
                     open_list.insert(inserir);
+                    std::pair<std::string,vector< vector<int> >> estadoadicionado (possibilidade, teste);
+                    closed_list.insert(estadoadicionado);
             }
             else{
                 cout<<"Caiu aqui"<<"\n";
@@ -187,13 +195,16 @@ void principal(vector< vector<int> > teste, int movimentos){
             matriz[x][y] = teste[x][y1];
             matriz[x][y1] = teste[x][y];
             string possibilidade = transformaMatrizString(matriz);
-            std::unordered_map<std::string,vector< vector<int> >>::const_iterator got1 = closed_list.find(possibilidade);
-            std::multimap<int,vector< vector<int> >>::const_iterator got2 = open_list.find(possibilidade);
-            if ((got1==closed_list.end())&&(got2!=open_list.end())){
+            std::unordered_map<std::string,int>::iterator got1 = closed_list.find(possibilidade);
+            if (got1==closed_list.end()){
                     int dif = diferencaMatriz(matriz);
                     int total = dif + counter;
-                    std::pair<int,vector< vector<int> >> inserir (total, matriz);
+                    string pai = transformaMatrizString(teste);
+                    std::pair<vector< vector<int> >, pai> segundo;
+                    std::pair<int,segundo> inserir (total, matriz);
                     open_list.insert(inserir);
+                    std::pair<std::string,vector< vector<int> >> estadoadicionado (possibilidade, teste);
+                    closed_list.insert(estadoadicionado);
             }
             else{
                 cout<<"Caiu aqui"<<"\n";
@@ -201,12 +212,8 @@ void principal(vector< vector<int> > teste, int movimentos){
         }
 
         string atual = transformaMatrizString(teste);
-        std::pair<std::string,vector< vector<int> >> estadofinalizado (atual, teste);
+        std::pair<std::string,vector< vector<int> >> estadofinalizado (atual, counter);
         closed_list.insert(estadofinalizado);
-        auto primeiro = open_list.cbegin();
-
-        teste = primeiro->second;
-        open_list.erase(primeiro);
         difteste = diferencaMatriz(teste);
         if (difteste==8){
             break;
