@@ -113,32 +113,40 @@ void principal(vector< vector<int> > matrizatual, int movimentos){
     string retorno3;
     string retorno4;
 
-    std::unordered_map<string,std::pair<vector< vector<int> >, string> > closed_list;
-    std::multimap<int,std::pair<vector< vector<int> >, string> > open_list;
+    std::unordered_map<string,std::pair<vector< vector<int> >, int> > closed_list;
+    std::multimap<int,std::pair<vector< vector<int> >, int> > open_list;
 
 
     string pai;
     int difmatrizatual = diferencaMatriz(matrizatual);
-    std::pair<vector< vector<int> >, string> segundoargumento;
-    segundoargumento = std::make_pair(matrizatual, pai);
-    std::pair<int, std::pair<vector< vector<int> >, string> > inserir;
+
+    std::pair<vector< vector<int> >, int> segundoargumento;
+    segundoargumento = std::make_pair(matrizatual, 0);
+    std::pair<int, std::pair<vector< vector<int> >, int> > inserir;
     inserir = std::make_pair(difmatrizatual, segundoargumento);
 
     open_list.insert(inserir);
 
     while(!open_list.empty()){
 
-        std::multimap<int,std::pair<vector< vector<int> >, string> >::iterator multiatual = open_list.begin();
+        std::multimap<int,std::pair<vector< vector<int> >, int> >::iterator multiatual = open_list.begin();
 
-        std::pair<vector< vector<int> >, string>  par2 = multiatual->second;
+        std::pair<vector< vector<int> >, int>  par2 = multiatual->second;
         vector< vector<int> > matrizatualx = par2.first;
         int difmatrizatual = diferencaMatriz(matrizatualx);
         string stringatual = transformaMatrizString(matrizatualx);
+        int atualizar = par2.second + 1;
+        int valor = par2.second;
 
         cout<<"Dif matriz atual: "<<difmatrizatual<<"\n";
         if (difmatrizatual == 0){
+            int valor;
             string atualstring = transformaMatrizString(matrizatualx);
-            std::pair<vector< vector<int> >, string> acharPai;
+            std::pair<vector< vector<int> >, int> acharvalor= multiatual->second;
+            valor = acharvalor.second;
+
+            cout<<"Movimentos: "<<valor;
+            /*
             acharPai = multiatual->second;
             pai = acharPai.second;
             std::pair<std::string,std::pair<vector< vector<int> >, string> > estadofinalizado;
@@ -147,6 +155,7 @@ void principal(vector< vector<int> > matrizatual, int movimentos){
             estadofinalizado = make_pair(atualstring, valores);
             closed_list.insert(estadofinalizado);
             printpassos(closed_list, stringatual);
+            */
             break;
         }
 
@@ -164,9 +173,9 @@ void principal(vector< vector<int> > matrizatual, int movimentos){
 
         if (closed_list.empty()){
             string atualstring = transformaMatrizString(matrizatualx);
-            std::pair<std::string,std::pair<vector< vector<int> >, string> > estadofinalizado;
-            std::pair<vector< vector<int> >, string>  valores;
-            valores = std::make_pair(matrizatualx, "");
+            std::pair<std::string,std::pair<vector< vector<int> >, int> > estadofinalizado;
+            std::pair<vector< vector<int> >, int>  valores;
+            valores = std::make_pair(matrizatualx, 0);
             estadofinalizado = make_pair(atualstring, valores);
             closed_list.insert(estadofinalizado);
             }
@@ -175,11 +184,27 @@ void principal(vector< vector<int> > matrizatual, int movimentos){
             std::pair<vector< vector<int> >, string> acharPai;
             acharPai = multiatual->second;
             pai = acharPai.second;
-            std::pair<std::string,std::pair<vector< vector<int> >, string> > estadofinalizado;
-            std::pair<vector< vector<int> >, string>  valores;
-            valores = std::make_pair(matrizatualx, pai);
-            estadofinalizado = make_pair(atualstring, valores);
-            closed_list.insert(estadofinalizado);
+
+            std::unordered_map<std::string,std::pair<vector< vector<int> >, int> >::iterator searchpai = closed_list.find(pai);
+            if (searchpai != closed_list.end()){
+                std::pair<vector< vector<int> >, int> passo1 = searchpai->second;
+                int valoranterior = passo1.second;
+                cout<<"teste";
+                if (valoranterior+1 < atualizar){
+                    std::pair<std::string,std::pair<vector< vector<int> >, int> > estadofinalizado;
+                    std::pair<vector< vector<int> >, int>  valores;
+                    valores = std::make_pair(matrizatualx, valoranterior+1);
+                    estadofinalizado = make_pair(atualstring, valores);
+                    closed_list.insert(estadofinalizado);
+                }
+            }
+            else{
+                std::pair<std::string,std::pair<vector< vector<int> >, int> > estadofinalizado;
+                std::pair<vector< vector<int> >, int>  valores;
+                valores = std::make_pair(matrizatualx, atualizar);
+                estadofinalizado = make_pair(atualstring, valores);
+                closed_list.insert(estadofinalizado);
+            }
         }
 
 
@@ -194,23 +219,21 @@ void principal(vector< vector<int> > matrizatual, int movimentos){
             matriz[x0][y] = matrizatualx[x][y];
             string possibilidade = transformaMatrizString(matriz);
 
-            std::unordered_map<string,std::pair<vector< vector<int> >, string> >::iterator got1 = closed_list.find(possibilidade);
+            std::unordered_map<string,std::pair<vector< vector<int> >, int> >::iterator got1 = closed_list.find(possibilidade);
 
 
             if (got1==closed_list.end()){
-                std::unordered_map<std::string,std::pair<vector< vector<int> >, string> >::iterator searchpai = closed_list.find(stringatual);
-
-
+                std::unordered_map<std::string,std::pair<vector< vector<int> >, int> >::iterator searchpai = closed_list.find(stringatual);
 
                 int difmatrizpossibilidade = diferencaMatriz(matriz) + 1;
 
-
-
-                std::pair<vector< vector<int> >, string> segundoargumento;
-                segundoargumento = std::make_pair(matriz, stringatual);
-                std::pair<int, std::pair<vector< vector<int> >, string> > inserir;
+                std::pair<vector< vector<int> >, int> segundoargumento;
+                segundoargumento = std::make_pair(matriz, atualizar);
+                std::pair<int, std::pair<vector< vector<int> >, int> >inserir;
                 inserir = std::make_pair(difmatrizpossibilidade, segundoargumento);
                 open_list.insert(inserir);
+            }
+            else{
 
             }
         }
@@ -220,21 +243,22 @@ void principal(vector< vector<int> > matrizatual, int movimentos){
             matriz[x][y] = matrizatualx[x1][y];
             matriz[x1][y] = matrizatualx[x][y];
             string possibilidade = transformaMatrizString(matriz);
-            std::unordered_map<string,std::pair<vector< vector<int> >, string> >::iterator got1 = closed_list.find(possibilidade);
+            std::unordered_map<string,std::pair<vector< vector<int> >, int> >::iterator got1 = closed_list.find(possibilidade);
             if (got1==closed_list.end()){
-                std::unordered_map<std::string,std::pair<vector< vector<int> >, string> >::iterator searchpai = closed_list.find(stringatual);
-
-
+                std::unordered_map<std::string,std::pair<vector< vector<int> >, int> >::iterator searchpai = closed_list.find(stringatual);
 
                 int difmatrizpossibilidade = diferencaMatriz(matriz) +1;
 
-
-                std::pair<vector< vector<int> >, string> segundoargumento;
-                segundoargumento = std::make_pair(matriz, stringatual);
-                std::pair<int, std::pair<vector< vector<int> >, string> > inserir;
+                std::pair<vector< vector<int> >, int> segundoargumento;
+                segundoargumento = std::make_pair(matriz, atualizar);
+                std::pair<int, std::pair<vector< vector<int> >, int> > inserir;
                 inserir = std::make_pair(difmatrizpossibilidade, segundoargumento);
                 open_list.insert(inserir);
 
+            }
+            else{
+                std::pair<vector< vector<int> >, int>  passo1 = got->second;
+                int valoranterior = passo1.second;
             }
         }
         if(y0>=0){
@@ -243,15 +267,15 @@ void principal(vector< vector<int> > matrizatual, int movimentos){
             matriz[x][y] = matrizatualx[x][y0];
             matriz[x][y0] = matrizatualx[x][y];
             string possibilidade = transformaMatrizString(matriz);
-            std::unordered_map<string,std::pair<vector< vector<int> >, string> >::iterator got1 = closed_list.find(possibilidade);
+            std::unordered_map<string,std::pair<vector< vector<int> >, int> >::iterator got1 = closed_list.find(possibilidade);
             if (got1==closed_list.end()){
-                std::unordered_map<std::string,std::pair<vector< vector<int> >, string> >::iterator searchpai = closed_list.find(stringatual);
+                std::unordered_map<std::string,std::pair<vector< vector<int> >, int> >::iterator searchpai = closed_list.find(stringatual);
 
                 int difmatrizpossibilidade = diferencaMatriz(matriz)+1;
 
-                std::pair<vector< vector<int> >, string> segundoargumento;
-                segundoargumento = std::make_pair(matriz, stringatual);
-                std::pair<int, std::pair<vector< vector<int> >, string> > inserir;
+                std::pair<vector< vector<int> >, int> segundoargumento;
+                segundoargumento = std::make_pair(matriz, atualizar);
+                std::pair<int, std::pair<vector< vector<int> >, int> > inserir;
                 inserir = std::make_pair(difmatrizpossibilidade, segundoargumento);
                 open_list.insert(inserir);
             }
@@ -262,16 +286,16 @@ void principal(vector< vector<int> > matrizatual, int movimentos){
             matriz[x][y] = matrizatualx[x][y1];
             matriz[x][y1] = matrizatualx[x][y];
             string possibilidade = transformaMatrizString(matriz);
-            std::unordered_map<string,std::pair<vector< vector<int> >, string> >::iterator got1 = closed_list.find(possibilidade);
+            std::unordered_map<string,std::pair<vector< vector<int> >, int> >::iterator got1 = closed_list.find(possibilidade);
             if (got1==closed_list.end()){
-                std::unordered_map<std::string,std::pair<vector< vector<int> >, string> >::iterator searchpai = closed_list.find(stringatual);
+                std::unordered_map<std::string,std::pair<vector< vector<int> >, int> >::iterator searchpai = closed_list.find(stringatual);
 
 
                 int difmatrizpossibilidade = diferencaMatriz(matriz)+1;
 
-                std::pair<vector< vector<int> >, string> segundoargumento;
-                segundoargumento = std::make_pair(matriz, stringatual);
-                std::pair<int, std::pair<vector< vector<int> >, string> > inserir;
+                std::pair<vector< vector<int> >, int> segundoargumento;
+                segundoargumento = std::make_pair(matriz, atualizar);
+                std::pair<int, std::pair<vector< vector<int> >, int> > inserir;
                 inserir = std::make_pair(difmatrizpossibilidade, segundoargumento);
                 open_list.insert(inserir);
 
@@ -318,6 +342,6 @@ int main(int argc, char** argv) {
                                    {6, 11, 3, 1},
                                    {8, 2, 15, 12}};
 
-    principal(caso5, 0);
+    principal(caso1, 0);
     return 0;
 }
