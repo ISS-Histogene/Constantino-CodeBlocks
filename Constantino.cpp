@@ -293,13 +293,31 @@ int main(int argc, char** argv) {
                                     {3, 7, 12, 10},
                                     {15, 1, 14, 11}};
 
-    vector< vector<int> > teste = {{1, 12, 11, 10},
+    vector< vector<int> > caso1 = {{1, 12, 11, 10},
                                      {0, 2, 13, 8},
                                      {5, 4, 9, 15},
                                      {3, 6, 14, 7}};
 
+    vector< vector<int> > caso2 = {{1, 6, 0, 11},
+                                   {2, 9, 13, 5},
+                                   {3, 7, 14, 10},
+                                   {4, 8, 12, 15}};
 
+    vector< vector<int> > caso3 = {{9, 8, 0, 14},
+                                   {7, 6, 5, 1},
+                                   {2, 4, 11, 10},
+                                   {3, 12, 13, 15}};
 
-    principal(teste, 0);
+    vector< vector<int> > caso4 = {{1, 13, 7, 10},
+                                    {2, 0, 12, 11},
+                                    {3, 14, 6, 9},
+                                    {8, 4, 5, 15}};
+
+    vector< vector<int> > caso5 = {{4, 7, 0, 13},
+                                   {5, 9, 10, 14},
+                                   {6, 11, 3, 1},
+                                   {8, 2, 15, 12}};
+
+    principal(caso5, 0);
     return 0;
 }
